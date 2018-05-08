@@ -11,6 +11,7 @@ import { FlexLayoutModule } from "@angular/flex-layout";
 //Material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCardModule } from '@angular/material/card';
+
 //custom components
 import { CalculatorComponent } from './components/calculator/calculator.component';
 @NgModule({

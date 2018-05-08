@@ -4,7 +4,8 @@ import { CalculatorComponent } from './components/calculator/calculator.componen
 const routes: Routes = [
   {
     path: '',
-    component: CalculatorComponent,
+    redirectTo: 'calculator',
+    pathMatch: 'full'
   },
   {
     path: 'calculator',
