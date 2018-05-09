@@ -1,5 +1,49 @@
+<div fxLayout="row" fxLayoutAlign="center center" class="wrap" style="margin: 24px 0;">
+    <mat-card class="box" fxFlex="90%">
+        <div fxLayout="column" fxLayoutAlign="center">
+          <mat-card>
+              <mat-select placeholder="Select Year" fxFlex="15%">
+                  <mat-option *ngFor="let year of years" [value]="year">
+                    {{ year }}
+                  </mat-option>
+                </mat-select>
 
-<div fxLayout="row" fxLayoutAlign="center center" style="margin: 24px 0;">
-  <mat-card class="box" fxFlex="90%">
-  </mat-card>
-</div>
+              <form >
+                  <mat-form-field >
+                    <input matInput placeholder="First Name" >
+                  </mat-form-field>
+                
+                  <mat-form-field >
+                      <input matInput placeholder="LastName" >
+                  </mat-form-field>
+              </form>
+              <form>
+                  <mat-form-field>
+                      <input matInput [matDatepicker]="picker" placeholder="Date of birth">
+                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+              </form>
+              <form >          
+                  <mat-form-field >
+                      <input matInput placeholder="Earnings" >
+                  </mat-form-field>
+
+                  <mat-select placeholder="Anual /Monthly" fxFlex="10%">
+                      <mat-option *ngFor="let type of earningTypes" [value]="type">
+                        {{ type }}
+                      </mat-option>
+                    </mat-select>
+              </form>
+              <mat-slider
+              [max]="10"
+              [min]="0"
+              [step]="1"
+              thumbLabel
+              >
+          </mat-slider>
+          </mat-card>
+          <button mat-raised-button color="primary">submit</button>
+        </div>
+    </mat-card>
+  </div>
