@@ -10,7 +10,7 @@ import { FlexLayoutModule } from "@angular/flex-layout";
 
 //Material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatCardModule } from '@angular/material/card';
+import { MatCardModule,MatSelectModule,MatButtonModule,MatSliderModule,MatInputModule,MatDatepickerModule,MatNativeDateModule } from '@angular/material';
 
 //custom components
 import { CalculatorComponent } from './components/calculator/calculator.component';
@@ -21,6 +21,7 @@ import { CalculatorComponent } from './components/calculator/calculator.componen
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
@@ -30,7 +31,13 @@ import { CalculatorComponent } from './components/calculator/calculator.componen
     FlexLayoutModule,
 
     //materials
-    MatCardModule
+    MatCardModule,
+    MatSelectModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSliderModule,
+    MatButtonModule
   ],
   providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }],
   bootstrap: [AppComponent]
