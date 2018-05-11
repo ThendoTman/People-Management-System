@@ -14,6 +14,7 @@ import { MatCardModule,MatSelectModule,MatButtonModule,MatSliderModule,MatInputM
 
 //custom components
 import { CalculatorComponent } from './components/calculator/calculator.component';
+import { CalculatetaxService } from './services/calculatetax.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -39,7 +40,7 @@ import { CalculatorComponent } from './components/calculator/calculator.componen
     MatSliderModule,
     MatButtonModule
   ],
-  providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy }],
+  providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy },CalculatetaxService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
