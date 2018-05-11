@@ -3,6 +3,7 @@ export class IndividualTaxMember{
   name:string;
   lastName:string;
   age:number;
+  taxable:boolean;
   earning:number;
   medicalAidMembers:number;
 }

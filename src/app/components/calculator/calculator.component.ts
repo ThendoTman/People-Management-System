@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { taxPayers } from '../../mock/mock.taxPayer.';
+import { TaxPayer } from '../../models/taxPayer.model';
 
 @Component({
   selector: 'app-calculator',
@@ -8,14 +10,18 @@ import { Component, OnInit } from '@angular/core';
 export class CalculatorComponent implements OnInit {
   years:number[]=[2017,2018];
   selectedYear:number;
-
+  taxpays:TaxPayer[];
   earningTypes:string[]=['Yearly','Monthly']
   selectedType:string="";
   selectedEarning:string;
   anualAmount:number;
-  constructor() { }
+  constructor() { 
+    this.taxpays=[];
+  }
 
   ngOnInit() {
+
+
   }
 
   calculateTax(){
@@ -23,8 +29,7 @@ export class CalculatorComponent implements OnInit {
       this.anualAmount = this.anualAmount*12
     }
 
-          /*
-      
+      /*
       amount =AnualAmount - (previuas taxable income threshold)
       amount = amount * percentage on the current taxable income
       amaount = amount +rateOfTax
