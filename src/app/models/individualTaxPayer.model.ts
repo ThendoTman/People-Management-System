@@ -1,4 +1,4 @@
-export class TaxPayer{
+export class IndividualTaxMember{
   id:number;
   name:string;
   lastName:string;

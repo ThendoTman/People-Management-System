@@ -10,9 +10,27 @@ export class CalculatorComponent implements OnInit {
   selectedYear:number;
 
   earningTypes:string[]=['Yearly','Monthly']
+  selectedType:string="";
   selectedEarning:string;
+  anualAmount:number;
   constructor() { }
 
   ngOnInit() {
+  }
+
+  calculateTax(){
+    if(this.selectedType == 'Monthly'){
+      this.anualAmount = this.anualAmount*12
+    }
+
+          /*
+      
+      amount =AnualAmount - (previuas taxable income threshold)
+      amount = amount * percentage on the current taxable income
+      amaount = amount +rateOfTax
+      if(medical aid)
+      amount = amount - reabates
+      amount = amount/12
+      */
   }
 }

@@ -1,8 +1,8 @@
-<div fxLayout="row" fxLayoutAlign="center center" class="wrap" style="margin: 24px 0;">
-    <mat-card class="box" fxFlex="90%">
-        <div fxLayout="column" fxLayoutAlign="center">
-          <mat-card>
-              <mat-select placeholder="Select Year" fxFlex="15%">
+<div style="margin: 50px 150px;">
+    <mat-card class="box" >
+          <mat-card class="wrap" fxLayout="row">
+            <div class="col-sm-6" >
+              <mat-select placeholder="Select Year" fxFlex="20%">
                   <mat-option *ngFor="let year of years" [value]="year">
                     {{ year }}
                   </mat-option>
@@ -29,21 +29,35 @@
                       <input matInput placeholder="Earnings" >
                   </mat-form-field>
 
-                  <mat-select placeholder="Anual /Monthly" fxFlex="10%">
-                      <mat-option *ngFor="let type of earningTypes" [value]="type">
-                        {{ type }}
+                  <mat-select placeholder="Anual /Monthly" fxFlex="20%">
+                      <mat-option *ngFor="let type of earningTypes" [value]="selectedType">
+                        {{ selectedType }}
                       </mat-option>
                     </mat-select>
               </form>
-              <mat-slider
-              [max]="10"
-              [min]="0"
-              [step]="1"
-              thumbLabel
-              >
-          </mat-slider>
+              Medical Aid dependants including owner
+              <mat-slider [max]="10" [min]="0" [step]="1" thumbLabel fxFlex="50%">
+              </mat-slider>
+            </div>
+
+            <div class="col-sm-5" >
+                <p>
+                    Monthly Amount {{monthly}}
+                </p>
+                <p>
+                    Annual Amount {{annoually}}
+                </p>
+                <p> 
+                    Tax Credits {{credits}} 
+                </p>
+                <p>
+                    PAYE Due {{payDue}}
+                </p>
+                <p>
+                    Net Pay {{netPay}}
+                </p>
+            </div>
           </mat-card>
           <button mat-raised-button color="primary">submit</button>
-        </div>
     </mat-card>
   </div>
