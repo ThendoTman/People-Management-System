@@ -1,63 +1,97 @@
-<div style="margin: 50px 150px;">
+<div  style="margin: 50px 150px;">
     <mat-card class="box" >
-          <mat-card class="wrap" fxLayout="row">
+        <mat-card class="wrap" fxLayout="row">
             <div class="col-sm-6" >
-              <mat-select placeholder="Select Year" fxFlex="20%">
-                  <mat-option *ngFor="let year of years" [value]="year">
-                    {{ year }}
-                  </mat-option>
+                <mat-select placeholder="Select Year" [(value)]="selectedYear"fxFlex="20%" (selectionChange) = "selectYear()">
+                    <mat-option *ngFor="let year of taxYears" [value]="year">
+                        {{ year }}
+                    </mat-option>
                 </mat-select>
-
-              <form >
-                  <mat-form-field >
-                    <input matInput placeholder="First Name" >
-                  </mat-form-field>
-                
-                  <mat-form-field >
-                      <input matInput placeholder="LastName" >
-                  </mat-form-field>
-              </form>
-              <form>
-                  <mat-form-field>
-                      <input matInput [matDatepicker]="picker" placeholder="Date of birth">
-                      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                      <mat-datepicker #picker></mat-datepicker>
-                    </mat-form-field>
-              </form>
-              <form >          
-                  <mat-form-field >
-                      <input matInput placeholder="Earnings" >
-                  </mat-form-field>
-
-                  <mat-select placeholder="Anual /Monthly" fxFlex="20%">
-                      <mat-option *ngFor="let type of earningTypes" [value]="selectedType">
-                        {{ selectedType }}
-                      </mat-option>
-                    </mat-select>
-              </form>
-              Medical Aid dependants including owner
-              <mat-slider [max]="10" [min]="0" [step]="1" thumbLabel fxFlex="50%">
-              </mat-slider>
-            </div>
-
-            <div class="col-sm-5" >
+                <form  [formGroup]="calculatorForm" (ngSubmit)="onSubmit(calculatorForm.value)">
+                    <form [formGroup]="calculatorForm" >
+                        <mat-form-field >
+                          <input matInput placeholder="First Name" [(ngModel)]="taxedCandidate.name" formControlName="name">
+                        </mat-form-field>
+                        
+                        <mat-form-field >
+                            <input matInput placeholder="LastName" [(ngModel)]="taxedCandidate.lastName" formControlName="lastName">
+                        </mat-form-field>
+                    </form>
+                    <form [formGroup]="calculatorForm" >
+                        <mat-form-field>
+                            <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker" placeholder="Date of birth" (dateChange)="getAge()" [(ngModel)]="dateOfBirth" formControlName="birthDate">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker [startAt]="startDate"></mat-datepicker>
+                        </mat-form-field>
+                    </form>
+                    <form [formGroup]="calculatorForm" >          
+                        <mat-form-field >
+                            <input matInput placeholder="Earning" formControlName="earning" [(ngModel)]="taxedCandidate.earning">
+                        </mat-form-field>
+          
+                        <mat-select placeholder="Anual /Monthly" fxFlex="20%" [(value)]="selectedType" (selectionChange) = "earningTypeSelected()">
+                            <mat-option *ngFor="let type of earningTypes" [value]="type">
+                                {{ type }}
+                            </mat-option>
+                        </mat-select>
+                    </form>
+                    <form [formGroup]="calculatorForm" >  
+                        Medical Aid dependants including owner 
+                        <mat-slider [max]="10" [min]="0" [step]="1" thumbLabel fxFlex="50%" formControlName="medicalAidMembers" [(ngModel)]="taxedCandidate.medicalAidMembers">
+                        </mat-slider>
+                    </form>
+            </form>
+            </div> 
+            <div class="col-sm-5" *ngIf="taxResult.member">
                 <p>
-                    Monthly Amount {{monthly}}
+                    {{taxResult.member.name}} your calculations are as follows
+                </p>
+                <p >
+                    Annual Amount: R{{taxResult.member.earning}}
+                </p>
+                <p >
+                    Annual Tax: R{{taxResult.totalTax}}
                 </p>
                 <p>
-                    Annual Amount {{annoually}}
+                    Monthly Amount: R{{taxResult.member.earning/12}}
+                </p>
+                <p >
+                    Monthly Tax: R{{taxResult.totalTax/12}}
                 </p>
                 <p> 
-                    Tax Credits {{credits}} 
+                    Tax Credits: R{{taxResult.credits}} 
                 </p>
                 <p>
-                    PAYE Due {{payDue}}
+                    Anual Net Pay: R{{taxResult.member.earning-taxResult.totalTax}}
                 </p>
                 <p>
-                    Net Pay {{netPay}}
+                    Monthly Net Pay: R{{taxResult.member.earning/12-taxResult.totalTax/12}}
                 </p>
             </div>
-          </mat-card>
-          <button mat-raised-button color="primary">submit</button>
+        </mat-card>
+        <button mat-raised-button color="primary" (click)="submitUser()" >Save User</button>            
+    </mat-card>
+
+    <mat-card class="box" *ngIf="taxResult.member">
+        <mat-card class="wrap" fxLayout="row">
+            <div class="col-sm-6" >
+                <p-dataTable [value]="citizens" [rows]="5" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,15]">
+                    <p-header>individual Tax Payers</p-header>
+                    <p-column field="name" header="First Name"></p-column>
+                    <p-column field="lastName" header="Last Name"></p-column>
+                    <p-column field="age" header="Age"></p-column>
+                    <p-column field="medicalAidMembers" header="Medic Members"></p-column>
+                    <p-column field="earning" header="Earnings"></p-column>
+                </p-dataTable>                        
+            </div>
+            <div class="col-sm-6" >
+                    <p-dataTable [value]="taxResults" [rows]="5" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,15]">
+                        <p-header>individual Tax Payers' Tax Results</p-header>
+                        <p-column field="credits" header="Credits"></p-column>
+                        <p-column field="totalTax" header="Tax Amount"></p-column>
+                        <p-column field="commet" header="Comments"></p-column>
+                    </p-dataTable>                        
+                </div>
+        </mat-card>
     </mat-card>
   </div>

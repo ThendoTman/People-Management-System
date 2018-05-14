@@ -1,5 +1,6 @@
 export class Rebate{
   id:number;
-  rebate:string;
+  rebateAge:number;
   amount:number;
+  year:number;
 }

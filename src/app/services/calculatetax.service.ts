@@ -3,81 +3,68 @@ import { IndividualTaxMember } from '../models/individualTaxPayer.model';
 import { taxThreshold } from '../mock/mock.taxThreshold';
 import { taxPayers } from '../mock/mock.taxPayer.';
 import { TaxPayer } from '../models/taxPayer.model';
+import { Rebate } from '../models/taxRebate.model';
+import { taxRebates } from '../mock/mock.taxRebate';
 
 @Injectable()
 export class CalculatetaxService {
 
   anoulAmount:number;
   taxedAmount:number;
-  
+  current:TaxPayer;
+  previuas:TaxPayer;
+  rebates:Rebate[];
+  taxpayers:any;
+  credits:number;
   constructor() { 
     this.anoulAmount=0;
     this.taxedAmount=0;
-    
+    this.current = this.previuas = new TaxPayer;
+    this.rebates=[];
+    this.credits=0;
   }
 
   calculateTax(taxedPerson:IndividualTaxMember,earningType:string,taxYear:number) {
 
+   
     if( earningType == "Monthly")
       taxedPerson.earning = taxedPerson.earning*12;
-
-     this.checkTaxability(taxedPerson.age,taxedPerson.earning,taxedPerson.taxable);
-
-
-    if(taxedPerson.taxable){
-      // taxPayers.forEach({})
-      let taxpayers=taxPayers.filter(ofyear => ofyear.year == taxYear);
-    }
-    
  
-          /*
+    this.taxpayers= taxPayers.filter(ofyear => ofyear.year == taxYear);
+    this.getTaxIncomeRange(taxedPerson.earning);
 
-              this.taxpays=taxPayers.filter(ofyear => ofyear.year == 2017);
-    let previuas:TaxPayer;
-    let current:TaxPayer;
-    let amount = 360000;
-   for(let i =0; i< this.taxpays.length ; i++){
-      if(amount <= this.taxpays[i].taxableIncome)
-      {
-        current = this.taxpays[i];
+    if(this.previuas)
+    this.taxedAmount = taxedPerson.earning - this.previuas.taxableIncome;
+    this.taxedAmount = this.taxedAmount * this.current.rateOfTax;
+    this.taxedAmount = this.taxedAmount + this.previuas.added;
+    this.rebates = taxRebates.filter(rebate=> taxYear == rebate.year);
+
+    this.getRebates(taxedPerson.age,taxedPerson.medicalAidMembers);
+
+    return {"id":taxYear,"member":taxedPerson,'credits':this.credits,"totalTax":this.taxedAmount,"comment":"mm"};
+  }
+
+  getTaxIncomeRange(earnings){
+
+    for(let i =0; i< this.taxpayers.length ; i++){
+      if(earnings <= this.taxpayers[i].taxableIncome) {
+        this.current = this.taxpayers[i];
         break;
       }
-      else
-      {
-        previuas = this.taxpays[1];
+      else {
+        this.previuas = this.taxpayers[i];
       }
     }
-
-    let taxable = amount - previuas.taxableIncome;
-    console.log("amount - previuas.taxableIncome = "+ taxable +" \n");
-        taxable = taxable * current.rateOfTax;
-        console.log("taxable * current.rateOfTax : = "+taxable );
-        taxable = taxable + (previuas.taxableIncome*previuas.rateOfTax)
-        console.log("taxable = taxable + "+previuas.taxableIncome+"(amount-previuas.taxableIncome)"+previuas.rateOfTax+" = "+ (previuas.taxableIncome*previuas.rateOfTax))
-   
-        
-
-      amount =AnualAmount - (previuas taxable income threshold)
-      amount = amount * percentage on the current taxable income
-      amaount = amount +rateOfTax
-      if(medical aid)
-      amount = amount - reabates
-      amount = amount/12
-      */
   }
-
-  checkTaxability(age:number,earning:number,taxable):void
-  {
-    taxThreshold.forEach(threshold=>{
-      if(age <= threshold.age && earning >= threshold.threshold)
-        taxable =true;
-    })
+  getRebates(age:number,medicalAidMembers:number){
+    if(medicalAidMembers>0)
+    {
+      this.rebates.forEach(rebate=>{
+        if(age >=rebate.rebateAge){
+        this.anoulAmount += rebate.amount; 
+        this.credits +=rebate.amount;
+        }
+      })
+    }
   }
-
-  hasMedialAid(members):boolean{
-    
-    return (members>0)? true:false;
-  }
-
-
 }
